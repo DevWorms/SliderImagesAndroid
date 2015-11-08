@@ -1,5 +1,6 @@
 package ejemplo.devworms.sliderimagesandroid;
 
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -19,21 +20,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
+import ejemplo.devworms.sliderimagesandroid.efectos.ZoomOutPageTransformer;
+
 public class MainActivity extends AppCompatActivity {
 
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
+
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
     private ViewPager mViewPager;
 
     @Override
@@ -48,13 +44,40 @@ public class MainActivity extends AppCompatActivity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setPageTransformer(true, new ZoomOutPageTransformer());
 
+
+        final Handler handler = new Handler();
+        Timer swipeTimer =null;
+        final Runnable Update = new Runnable() {
+            public void run() {
+                Integer pos=0;
+                Integer count=mViewPager.getAdapter().getCount();
+                Integer current=mViewPager.getCurrentItem();
+
+
+
+                if (current < count-1) {
+                    pos=mViewPager.getCurrentItem() + 1;
+                }
+
+                mViewPager.setCurrentItem(pos);
+            }
+        };
+
+        swipeTimer = new Timer();
+        swipeTimer.schedule(new TimerTask() {
+
+            @Override
+            public void run() {
+                handler.post(Update);
+            }
+        }, 1000, 1500);
 
 
     }
 
-
-    @Override
+   @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -91,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+            return PlaceholderFragment.newInstance(position);
         }
 
         @Override
