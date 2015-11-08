@@ -23,6 +23,7 @@ import android.widget.TextView;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import ejemplo.devworms.sliderimagesandroid.efectos.DepthPageTransformer;
 import ejemplo.devworms.sliderimagesandroid.efectos.ZoomOutPageTransformer;
 
 public class MainActivity extends AppCompatActivity {
@@ -44,7 +45,8 @@ public class MainActivity extends AppCompatActivity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.setPageTransformer(true, new ZoomOutPageTransformer());
+        //mViewPager.setPageTransformer(true, new ZoomOutPageTransformer());
+        mViewPager.setPageTransformer(true, new DepthPageTransformer());
 
 
         final Handler handler = new Handler();
@@ -72,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 handler.post(Update);
             }
-        }, 1000, 1500);
+        }, 2000, 2500);
 
 
     }
